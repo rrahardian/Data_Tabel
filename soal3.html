@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        table {
+            width: 30%; border: 1px double blue;
+            border-collapse: collapse;
+        }
+        th, td {
+            width: 30%; border: 1px double blue;
+            border-collapse: collapse;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <center>
+
+    <input id="inputnama"  placeholder="Ketik nama anda"/>
+    <br><br>
+    <input id="inputlahir" type="date" placeholder="Ketik usia anda"/>
+    <br><br>
+    <input id="inputkota"  placeholder="Ketik kota tempat tinggal"/>
+    <br><br>
+
+    <button id="nAtas" onclick="sortNamaAtas()">Nama ↑</button>
+    <button id="nBawah" onclick="sortNamaBawah()">Nama ↓</button>
+    <button id="uAtas" onclick="sortUsiaAtas()">Usia ↑</button>
+    <button id="uBawah" onclick="sortUsiaBawah()">Usia ↓</button>
+    <button id="kAtas" onclick="sortKotaAtas()">Kota ↑</button>
+    <button id="kBawah" onclick="sortKotaBawah()">Kota ↓</button>
+    <button id="kBawah" onclick="hapus()">Hapus</button>
+    <br/>
+    <br/>
+
+    <button onclick="data()">
+        SUBMIT
+    </button>
+    <br><br>
+
+    <table id="table">
+        <thead id="thead">
+            
+        </thead>
+        <tbody id="tbody">
+            
+        </tbody>
+    </table>
+    </center>
+
+    <script>
+        let array = []
+        let date = new Date()
+        let bulan = [
+            'Januari', 'Februari', 'Maret', 'April', 
+            'Mei', 'Juni', 'Juli', 'Agustus', 
+            'September', 'Oktober', 'November', 'Desember'
+            ]
+
+        let data = () => {
+            
+            document.getElementById("tbody").innerHTML = ''
+
+            let nama = document.getElementById('inputnama').value
+            let tanggal = document.getElementById('inputlahir').value
+            let kota = document.getElementById('inputkota').value
+
+            if (nama == '') {
+                alert('Masukkan nama anda!')
+            } else if (tanggal == '') {
+                alert('Masukkan tanggal lahir!')
+            } else if (kota == '') {
+                alert('Masukkan kota tempat tinggal!')
+            } else {
+
+                let dataUser = {
+                    nama    : nama,
+                    tanggal : tanggal.split('-'),
+                    hari    : function(){
+                        return this.tanggal[2]
+                    },
+                    bulan   : function(){
+                        return this.tanggal[1]
+                    },
+                    tahun   : function(){
+                        return this.tanggal[0]
+                    },
+                    zodiak  : function() {
+                        if (this.hari() >= 20 && this.bulan() == 3 || this.hari() <= 20 && this.bulan() == 4) {
+                            return 'Taurus'
+                        } else if (this.hari() >= 21 && this.bulan() == 4 || this.hari() <= 20 && this.bulan() == 5) {
+                            return 'Gemini'
+                        } else if (this.hari() >= 21 && this.bulan() == 5 || this.hari() >= 22 && this.bulan() == 6) {
+                            return 'Cancer'
+                        } else if (this.hari() >= 23 && this.bulan() == 6 || this.hari() <= 22 && this.bulan() == 7) {
+                            return 'Leo'
+                        } else if (this.hari() >= 23 && this.bulan() == 7 || this.hari() <= 22 && this.bulan() == 8) {
+                            return 'Virgo'
+                        } else if (this.hari() >= 23 && this.bulan() == 8 || this.hari() <= 22 && this.bulan() == 9) {
+                            return 'libra'
+                        } else if (this.hari() >= 23 && this.bulan() == 9 || this.hari() <= 21 && this.bulan() == 10) {
+                            return 'Scorpio'
+                        } else if (this.hari() >= 22 && this.bulan() == 10 || this.hari() <= 21 && this.bulan() == 11) {
+                            return 'Sagittarius'
+                        } else if (this.hari() >= 22 && this.bulan() == 11 || this.hari() <= 19 && this.bulan() == 0) {
+                            return 'Capricorn'
+                        } else if (this.hari() >= 20 && this.bulan() == 0 || this.hari() >= 17 && this.bulan() == 1) {
+                            return 'Aquarius'
+                        } else if (this.hari() >= 18 && this.bulan() == 1 || this.hari() >= 19 && this.bulan() == 2) {
+                            return 'Pisces'
+                        } else if (this.hari() >= 20 && this.bulan() == 2 || this.hari() >= 19 && this.bulan() == 3) {
+                            return 'Aries'
+                        } else return 'Zodiak'
+                    },
+                    pensiun : function(){
+                        return date.getFullYear() - this.tanggal[0] - 55
+                    },
+                    usia    : function(){
+                        return date.getFullYear() - this.tanggal[0]
+                    },
+                    kota    : kota
+                }
+
+                document.getElementById('thead').innerHTML = 
+                '<tr><th>Nama</th><th colspan="3">Tanggal</th><th>Usia</th><th>Zodiak</th><th>Pensiun</th><th>Kota</th><th>Hapus</th></tr>'
+
+                array.push(dataUser)
+
+                show()
+            }
+        }
+
+        let hapus = () => {
+
+            for (i=0; i<array.length; i++) {
+                if (document.getElementById(i).checked) {
+                    array.splice(i, 1)
+                }
+            }
+            show()
+        }
+
+        let = sortNamaAtas = () => {
+            
+            array.sort(function(a,b){
+                let x = a.nama.toLowerCase()
+                let y = b.nama.toLowerCase()
+                if (x < y) return -1
+                else if (x > y) return 1
+                else 0
+            })
+
+            show()
+        }
+
+        let = sortNamaBawah = () => {
+
+            array.sort(function(a,b){
+                let x = a.nama.toLowerCase()
+                let y = b.nama.toLowerCase()
+                if (x < y) return 1
+                else if (x > y) return -1
+                else 0
+            })
+
+            show()
+        }
+
+        let = sortKotaAtas = () => {
+
+            array.sort(function(a,b){
+                let x = a.kota.toLowerCase()
+                let y = b.kota.toLowerCase()
+                if (x < y) return -1
+                else if (x > y) return 1
+                else 0
+            })
+
+            show()
+        }
+
+            let = sortKotaBawah = () => {
+
+            array.sort(function(a,b){
+                let x = a.kota.toLowerCase()
+                let y = b.kota.toLowerCase()
+                if (x < y) return 1
+                else if (x > y) return -1
+                else 0
+            })
+
+            show()
+        }
+
+        let = sortUsiaAtas = () => {
+
+            array.sort(function(a,b){
+                return a.usia() - b.usia()
+            })
+
+            show()
+        }
+
+        let = sortUsiaBawah = () => {
+
+            array.sort(function(a,b){
+                return b.usia() - a.usia()
+            })
+
+            show()
+        }
+
+        function show() {
+            document.getElementById("tbody").innerHTML = ''
+            
+            for (i=0; i<array.length; i++) {
+                document.getElementById("tbody").innerHTML += 
+                '<tr><td class="nama">' + array[i].nama + 
+                    '</td><td>' + array[i].hari() + 
+                        '</td><td>' + array[i].bulan() + 
+                            '</td><td>' + array[i].tahun() + 
+                                '</td><td>' + array[i].usia() + 
+                                    '</td><td>' + array[i].zodiak() + 
+                                        '</td><td>' + array[i].pensiun() + 
+                                            '</td><td>'+ array[i].kota + 
+                                                '</td><td><input type="radio" id='+i+' />Hapus</td></tr>'
+            }
+        }
+
+    </script>
+</body>
+</html>
